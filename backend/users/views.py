@@ -1,4 +1,6 @@
-from models import User
+from rest_framework.permissions import IsAuthenticated
+
+from .models import User
 from djoser.views import UserViewSet
 
 

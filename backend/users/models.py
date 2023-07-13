@@ -69,7 +69,7 @@ class Follow(models.Model):
         related_name='follower',
         verbose_name='Пользователь',
     )
-    following = models.ForeignKey(
+    author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='following',
@@ -81,7 +81,7 @@ class Follow(models.Model):
         verbose_name_plural = 'Подписчики'
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'following'], name='unique_user'
+                fields=['user', 'author'], name='unique_user'
             )
         ]
 
@@ -89,6 +89,6 @@ class Follow(models.Model):
         return f'{self.user}'
 
     def clean(self):
-        if self.user == self.following:
+        if self.user == self.author:
             raise ValidationError('Нельзя подписаться на самого себя')
         super(Follow, self).clean()

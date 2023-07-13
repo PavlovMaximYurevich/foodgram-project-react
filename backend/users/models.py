@@ -14,9 +14,9 @@ class User(AbstractUser):
     ]
 
     username = models.CharField(
-        'Имя пользователя',
+        'Никнейм',
         max_length=150,
-        help_text='Введите имя пользователя',
+        help_text='Введите ник пользователя',
         unique=True
     )
     email = models.EmailField(
@@ -24,9 +24,20 @@ class User(AbstractUser):
         max_length=254,
         unique=True,
     )
-    bio = models.TextField(
-        'Биография',
-        blank=True,
+    first_name = models.CharField(
+        'Имя пользователя',
+        max_length=150,
+        help_text='Введите имя пользователя',
+    )
+    last_name = models.CharField(
+        'Фамилия пользователя',
+        max_length=150,
+        help_text='Введите фамилию пользователя',
+    )
+    password = models.CharField(
+        'Пароль',
+        max_length=150,
+        help_text='Пароль',
     )
     role = models.CharField(
         'Пользовательская роль',

@@ -2,9 +2,6 @@ from django.db import models
 
 from users.models import User
 
-# CHECK_COLOR = r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$'
-CHECK_SLUG = r'^[-a-zA-Z0-9_]+$'
-
 
 class Tag(models.Model):
     name = models.CharField(
@@ -82,7 +79,8 @@ class Recept(models.Model):
     ingredients = models.ManyToManyField(
         Ingredients,
         verbose_name='Ингридиенты',
-        help_text='Выберите ингридиенты для рецепта'
+        help_text='Выберите ингридиенты для рецепта',
+        # through=
     )
     tag = models.ManyToManyField(
         Tag,

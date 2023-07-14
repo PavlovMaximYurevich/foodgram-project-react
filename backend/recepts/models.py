@@ -79,15 +79,49 @@ class Recept(models.Model):
         'Подробное описание рецепта',
         help_text='Опишите детально рецепт'
     )
-    # ingredients = models.ManyToManyField(
-    #     Ingredients,
-    #
-    # )
-    # tag = pass
+    ingredients = models.ManyToManyField(
+        Ingredients,
+        verbose_name='Ингридиенты',
+        help_text='Выберите ингридиенты для рецепта'
+    )
+    tag = models.ManyToManyField(
+        Tag,
+        verbose_name='Тэг',
+    )
     time_cooking = models.PositiveIntegerField(
         'Время приготовления в минутах',
         help_text='Укажите время приготовления в минутах'
     )
 
+    class Meta:
+        verbose_name = 'рецепт'
+        verbose_name_plural = 'рецепты'
+
+    def __str__(self):
+        return self.name_recept
 
 
+class Favourites(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        # related_name='favourite',
+        verbose_name='Пользователь'
+    )
+    recept = models.ForeignKey(
+        Recept,
+        on_delete=models.CASCADE,
+        verbose_name='Рецепт'
+    )
+
+    class Meta:
+        verbose_name = 'Избранное',
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'recept'],
+                name='unique_favourite'
+            )
+        ]
+
+    def __str__(self):
+        return f'У пользователя {self.user} есть свой рецепт - {self.recept}'

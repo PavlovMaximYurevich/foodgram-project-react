@@ -145,12 +145,11 @@ class ShoppingList(models.Model):
     )
 
     class Meta:
-        class Meta:
-            verbose_name = 'Список покупок',
-            verbose_name_plural = 'Списки покупок',
-            constraints = [
-                models.UniqueConstraint(
-                    fields=['user', 'recept'],
-                    name='unique_shopping_list'
-                )
-            ]
+        verbose_name = 'Список покупок',
+        verbose_name_plural = 'Списки покупок',
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'recept'],
+                name='unique_shopping_list'
+            )
+        ]

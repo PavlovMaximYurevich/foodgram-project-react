@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'api.apps.ApiConfig',
     'recepts.apps.ReceptsConfig',
+    'recepts.management',
 ]
 
 MIDDLEWARE = [

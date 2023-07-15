@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 
 from users.models import User
@@ -80,7 +81,8 @@ class Recept(models.Model):
         Ingredients,
         verbose_name='Ингридиенты',
         help_text='Выберите ингридиенты для рецепта',
-        # through=
+        related_name='recepts',
+        through='IngridientAmount'
     )
     tag = models.ManyToManyField(
         Tag,
@@ -149,5 +151,36 @@ class ShoppingList(models.Model):
             models.UniqueConstraint(
                 fields=['user', 'recept'],
                 name='unique_shopping_list'
+            )
+        ]
+
+
+class IngridientAmount(models.Model):
+    ingredient = models.ForeignKey(
+        Ingredients,
+        verbose_name='Ингридиент',
+        on_delete=models.CASCADE
+    )
+    recept = models.ForeignKey(
+        Recept,
+        verbose_name='Рецепт',
+        on_delete=models.CASCADE
+    )
+    amount = models.PositiveIntegerField(
+        'Количество',
+        validators=[
+            MinValueValidator(
+                1, message='количество должно быть положительным числом'
+            )
+        ]
+    )
+
+    class Meta:
+        verbose_name = 'Ингридиент в рецепте',
+        verbose_name_plural = 'Ингридиенты в рецепте',
+        constraints = [
+            models.UniqueConstraint(
+                fields=['ingredient', 'recept'],
+                name='ingredient_in_recept'
             )
         ]

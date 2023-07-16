@@ -1,5 +1,7 @@
+from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
+
 
 from .models import User
 from recepts.models import *
@@ -102,3 +104,48 @@ class ReceptReadSerializer(serializers.ModelSerializer):
             return False
         return user.user_shopper.filter(recept=obj).exists()
 
+
+class ReceptSerializer(serializers.ModelSerializer):
+    ingredients = IngredientAmountReceptSerializer(many=True)
+    image = Base64ImageField()
+    author = SimpleUserSerializer(read_only=True)
+    tags = serializers.PrimaryKeyRelatedField(
+        queryset=Tag.objects.all(),
+        many=True
+    )
+
+    class Meta:
+        model = Recept
+        fields = (
+            'id',
+            'ingredients',
+            'tags',
+            'author',
+            'image',
+            'name',
+            'text',
+            'cooking_time'
+        )
+
+    def validate_tags(self, value):
+        if not value:
+            raise serializers.ValidationError(
+                'Не выбрано ни одного тэга'
+            )
+        if len(value) != len(set(value)):
+            raise serializers.ValidationError(
+                'Тэги не уникальны!'
+            )
+        return value
+
+    def validate_ingredients(self, value):
+        if not value:
+            raise serializers.ValidationError(
+                'Не выбрано ни одного ингридиента'
+            )
+        all_ingredients = [ingredient['id'] for ingredient in value]
+        if len(all_ingredients) != len(set(all_ingredients)):
+            raise serializers.ValidationError(
+                'Ингридиенты не уникальны!'
+            )
+        return value

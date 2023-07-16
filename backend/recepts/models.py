@@ -57,13 +57,13 @@ class Ingredients(models.Model):
 
 
 class Recept(models.Model):
-    user = models.ForeignKey(
+    author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='recepts',
         verbose_name='Автор рецепта'
     )
-    name_recept = models.CharField(
+    name = models.CharField(
         'Название рецепта',
         max_length=200,
         unique=True,
@@ -73,7 +73,7 @@ class Recept(models.Model):
         verbose_name='Фото рецепта',
         upload_to='recepts/',
     )
-    text_description = models.TextField(
+    text = models.TextField(
         'Подробное описание рецепта',
         help_text='Опишите детально рецепт'
     )
@@ -84,11 +84,11 @@ class Recept(models.Model):
         related_name='recepts',
         through='IngridientAmount'
     )
-    tag = models.ManyToManyField(
+    tags = models.ManyToManyField(
         Tag,
         verbose_name='Тэг',
     )
-    time_cooking = models.PositiveIntegerField(
+    cooking_time = models.PositiveIntegerField(
         'Время приготовления в минутах',
         help_text='Укажите время приготовления в минутах'
     )
@@ -98,7 +98,7 @@ class Recept(models.Model):
         verbose_name_plural = 'рецепты'
 
     def __str__(self):
-        return self.name_recept
+        return self.name
 
 
 class Favourites(models.Model):

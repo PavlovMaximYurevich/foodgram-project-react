@@ -149,3 +149,36 @@ class ReceptSerializer(serializers.ModelSerializer):
                 'Ингридиенты не уникальны!'
             )
         return value
+
+    def create(self, validated_data):
+        ingredients = validated_data.pop('ingredients')
+        tags = validated_data.pop('tags')
+        author = self.context['request'].user
+        recept = Recept.objects.create(author=author, **validated_data)
+        recept.tags.set(tags)
+
+        for ingredient in ingredients:
+            current_ingredient = get_object_or_404(
+                Ingredients, id=ingredient.get('id')
+            )
+            IngridientAmount.objects.create(
+                ingredient=current_ingredient,
+                recept=recept,
+                amount=ingredient.get('amount')
+            )
+        return recept
+
+    def update(self, instance, validated_data):
+        ingredients = validated_data.pop('ingredients')
+        tags = validated_data.pop('tags')
+        instance.ingredients.clear()
+        instance.tags.set(tags)
+        for ingredient in ingredients:
+            current_ingredient = get_object_or_404(
+                Ingredients, id=ingredient.get('id')
+            )
+            Recept.objects.create(
+                recept=instance,
+                ingredient=current_ingredient,
+            )
+        return super().update(instance, validated_data)

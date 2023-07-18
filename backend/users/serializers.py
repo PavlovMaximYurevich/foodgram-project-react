@@ -35,11 +35,11 @@ class SimpleUserSerializer(UserSerializer):
                   'password',
                   'is_subscribed')
 
-        def subscribed(self, obj):
-            user = self.context.get('request').user
-            return user.is_authenticated and Follow.objects.filter(
-                user=user, author=obj.id
-            ).exists()
+    def get_is_subscribed(self, obj):
+        user = self.context.get('request').user
+        return user.is_authenticated and Follow.objects.filter(
+            user=user, author=obj.id
+        ).exists()
 
 
 class SignupSerializer(UserCreateSerializer):

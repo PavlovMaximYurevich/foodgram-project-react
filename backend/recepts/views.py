@@ -1,5 +1,6 @@
 import csv
 
+from django.db.models import Sum
 from django.http import HttpResponse
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -72,8 +73,12 @@ class ReceptViews(viewsets.ModelViewSet):
     def download_shopping_card(self, request):
         user = request.user
         ingredients = IngridientAmount.objects.filter(
+            recept__user_shopper__user=user
+        ).values(
+            'ingredient__name',
+            'ingredient__measurement_unit'
+        ).annotate(amount=Sum('amount'))
 
-        )
         response = HttpResponse(
             content_type="text/csv",
             headers={
@@ -81,4 +86,7 @@ class ReceptViews(viewsets.ModelViewSet):
             },
         )
         writer = csv.writer(response)
+        writer.writerow(ingredients)
+        for ingredient in list(ingredients):
+            writer.writerow(ingredient)
         return response

@@ -182,3 +182,6 @@ class ReceptSerializer(serializers.ModelSerializer):
                 ingredient=current_ingredient,
             )
         return super().update(instance, validated_data)
+
+    # def to_representation(self, instance):
+    #     pass

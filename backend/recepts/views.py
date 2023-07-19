@@ -54,7 +54,7 @@ class ReceptViews(viewsets.ModelViewSet):
     )
     def shopping_card(self, request, pk):
         recept = get_object_or_404(Recept, pk=pk)
-        user = self.request.user
+        user = request.user
         if self.request.method == 'POST':
             ShoppingList.objects.create(
                 user=user,
@@ -73,7 +73,7 @@ class ReceptViews(viewsets.ModelViewSet):
     def download_shopping_card(self, request):
         user = request.user
         ingredients = IngridientAmount.objects.filter(
-            recept__user_shopper__user=user
+            recept__user_shopper__user=user.id
         ).values(
             'ingredient__name',
             'ingredient__measurement_unit'

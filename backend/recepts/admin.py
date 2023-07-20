@@ -3,7 +3,12 @@ from django.contrib import admin
 from recepts.models import *
 
 
+class IngredientsInReceptAdmin(admin.TabularInline):
+    model = IngridientAmount
+
+
 class ReceptAdmin(admin.ModelAdmin):
+    inlines = (IngredientsInReceptAdmin, )
     list_display = (
         'pk',
         'author',

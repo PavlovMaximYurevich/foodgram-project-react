@@ -91,22 +91,22 @@ class FollowSerializer(serializers.ModelSerializer):
         slug_field='username',
         queryset=User.objects.all(),
         default=serializers.CurrentUserDefault())
-    following = serializers.SlugRelatedField(
+    author = serializers.SlugRelatedField(
         slug_field='username',
         queryset=User.objects.all())
 
     class Meta:
         model = Follow
-        fields = ('id', 'user', 'following')
+        fields = ('id', 'user', 'author')
         validators = [
             UniqueTogetherValidator(
                 queryset=Follow.objects.all(),
-                fields=('user', 'following')
+                fields=('user', 'author')
             )
         ]
 
     def validate(self, data):
-        if data.get('user') == data.get('following'):
+        if data.get('user') == data.get('author'):
             raise serializers.ValidationError(
                 'Нельзя подписаться на себя!'
             )

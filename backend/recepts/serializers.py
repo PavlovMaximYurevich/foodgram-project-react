@@ -57,11 +57,11 @@ class IngredientAmountReceptSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredients.objects.all()
     )
-    amount = serializers.IntegerField()
+    # amount = serializers.SerializerMethodField()
 
     class Meta:
         model = IngridientAmount
-        fields = ('id', 'amount')
+        fields = ('id', )
 
 
 class ReceptReadSerializer(serializers.ModelSerializer):

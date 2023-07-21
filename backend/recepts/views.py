@@ -90,3 +90,8 @@ class ReceptViews(viewsets.ModelViewSet):
         for ingredient in list(ingredients):
             writer.writerow(ingredient)
         return response
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ReceptReadSerializer
+        return ReceptSerializer

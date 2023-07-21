@@ -57,6 +57,7 @@ class IngredientAmountReceptSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredients.objects.all()
     )
+    # id = serializers.IntegerField()
     # amount = serializers.SerializerMethodField()
 
     class Meta:
@@ -107,12 +108,15 @@ class ReceptReadSerializer(serializers.ModelSerializer):
 
 class ReceptSerializer(serializers.ModelSerializer):
     ingredients = IngredientAmountReceptSerializer(many=True)
+    # ingredients = IngredientSerializer(many=True)
+    # ingredients = serializers.SerializerMethodField()
     image = Base64ImageField()
     author = SimpleUserSerializer(read_only=True)
-    tags = serializers.PrimaryKeyRelatedField(
-        queryset=Tag.objects.all(),
-        many=True
-    )
+    tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(),
+                                              many=True)
+    # tags = TagSerializer(many=True)
+    is_favorited = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = Recept
@@ -124,40 +128,44 @@ class ReceptSerializer(serializers.ModelSerializer):
             'image',
             'name',
             'text',
-            'cooking_time'
+            'cooking_time',
+            'is_favorited',
+            'is_in_shopping_cart'
         )
 
-    def validate_tags(self, value):
-        if not value:
+    def validate_tags(self, tags):
+        if not tags:
             raise serializers.ValidationError(
                 'Не выбрано ни одного тэга'
             )
-        if len(value) != len(set(value)):
+        if len(tags) != len(set(tags)):
             raise serializers.ValidationError(
                 'Тэги не уникальны!'
             )
-        return value
+        return tags
 
-    def validate_ingredients(self, value):
-        if not value:
+    def validate_ingredients(self, ingredients):
+        if not ingredients:
             raise serializers.ValidationError(
                 'Не выбрано ни одного ингридиента'
             )
-        all_ingredients = [ingredient['id'] for ingredient in value]
+        all_ingredients = [ingredient['id'] for ingredient in ingredients]
         if len(all_ingredients) != len(set(all_ingredients)):
             raise serializers.ValidationError(
                 'Ингридиенты не уникальны!'
             )
-        return value
+        return ingredients
 
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
+        print(tags)
         author = self.context['request'].user
         recept = Recept.objects.create(author=author, **validated_data)
         recept.tags.set(tags)
 
         for ingredient in ingredients:
+            print(ingredient)
             current_ingredient = get_object_or_404(
                 Ingredients, id=ingredient.get('id')
             )
@@ -182,4 +190,3 @@ class ReceptSerializer(serializers.ModelSerializer):
                 ingredient=current_ingredient,
             )
         return super().update(instance, validated_data)
-

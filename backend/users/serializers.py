@@ -31,8 +31,8 @@ class SimpleUserSerializer(UserSerializer):
                   'first_name',
                   'last_name',
                   'id',
-                  'role',
-                  'password',
+                  # 'role',
+                  # 'password',
                   'is_subscribed')
 
     def get_is_subscribed(self, obj):

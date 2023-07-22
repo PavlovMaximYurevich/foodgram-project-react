@@ -52,17 +52,24 @@ class AllIngredientInReceptSerializer(serializers.ModelSerializer):
             'amount',
         )
 
+    def to_internal_value(self, data):
+        return data
+
 
 class IngredientAmountReceptSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredients.objects.all()
     )
+
     # id = serializers.IntegerField()
     # amount = serializers.SerializerMethodField()
 
     class Meta:
         model = IngridientAmount
         fields = ('id', )
+
+    def to_internal_value(self, data):
+        return data
 
 
 class ReceptReadSerializer(serializers.ModelSerializer):
@@ -115,8 +122,8 @@ class ReceptSerializer(serializers.ModelSerializer):
     tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(),
                                               many=True)
     # tags = TagSerializer(many=True)
-    is_favorited = serializers.SerializerMethodField()
-    is_in_shopping_cart = serializers.SerializerMethodField()
+    # is_favorited = serializers.SerializerMethodField()
+    # is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = Recept
@@ -129,8 +136,8 @@ class ReceptSerializer(serializers.ModelSerializer):
             'name',
             'text',
             'cooking_time',
-            'is_favorited',
-            'is_in_shopping_cart'
+            # 'is_favorited',
+            # 'is_in_shopping_cart'
         )
 
     def validate_tags(self, tags):
@@ -159,13 +166,11 @@ class ReceptSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
-        print(tags)
         author = self.context['request'].user
         recept = Recept.objects.create(author=author, **validated_data)
         recept.tags.set(tags)
 
         for ingredient in ingredients:
-            print(ingredient)
             current_ingredient = get_object_or_404(
                 Ingredients, id=ingredient.get('id')
             )
@@ -185,8 +190,26 @@ class ReceptSerializer(serializers.ModelSerializer):
             current_ingredient = get_object_or_404(
                 Ingredients, id=ingredient.get('id')
             )
-            Recept.objects.create(
+            IngridientAmount.objects.create(
                 recept=instance,
                 ingredient=current_ingredient,
+                amount=ingredient.get('amount')
             )
         return super().update(instance, validated_data)
+
+    def to_representation(self, instance):
+        request = self.context.get('request')
+        context = {'request': request}
+        return ReceptReadSerializer(
+            instance, context=context).data
+
+
+class ShoppingListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recept
+        fields = (
+            'id',
+            'name',
+            'image',
+            'cooking_time'
+        )

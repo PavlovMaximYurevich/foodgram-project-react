@@ -54,13 +54,15 @@ class ReceptViews(viewsets.ModelViewSet):
     )
     def shopping_card(self, request, pk):
         recept = get_object_or_404(Recept, pk=pk)
-        user = request.user
+        user = self.request.user
         if self.request.method == 'POST':
+            if ShoppingList.objects.filter(recept=recept, user=user).exists():
+                raise ValidationError('уже есть в списке')
             ShoppingList.objects.create(
                 user=user,
                 recept=recept
             )
-            serializer = ReceptSerializer(recept)
+            serializer = ShoppingListSerializer(recept, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         if self.request.method == 'DELETE':
             shopping_list = get_object_or_404(
@@ -88,7 +90,8 @@ class ReceptViews(viewsets.ModelViewSet):
         writer = csv.writer(response)
         writer.writerow(ingredients)
         for ingredient in list(ingredients):
-            writer.writerow(ingredient)
+            # print(list(ingredient.values()))
+            writer.writerow(ingredient.values())
         return response
 
     def get_serializer_class(self):

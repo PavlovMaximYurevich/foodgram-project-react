@@ -35,11 +35,14 @@ class ReceptViews(viewsets.ModelViewSet):
         recept = get_object_or_404(Recept, pk=pk)
         user = self.request.user
         if self.request.method == 'POST':
+            if Favourites.objects.filter(recept=recept, user=user).exists():
+                raise ValidationError('уже есть в списке')
             Favourites.objects.create(
                 user=user,
                 recept=recept
             )
-            serializer = ReceptSerializer(recept)
+            serializer = ShoppingListSerializer(
+                recept, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         if self.request.method == 'DELETE':
             favorite_recept = get_object_or_404(
@@ -62,7 +65,8 @@ class ReceptViews(viewsets.ModelViewSet):
                 user=user,
                 recept=recept
             )
-            serializer = ShoppingListSerializer(recept, context={'request': request})
+            serializer = ShoppingListSerializer(
+                recept, context={'request': request})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         if self.request.method == 'DELETE':
             shopping_list = get_object_or_404(

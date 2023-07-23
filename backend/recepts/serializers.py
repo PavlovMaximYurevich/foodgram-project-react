@@ -115,15 +115,10 @@ class ReceptReadSerializer(serializers.ModelSerializer):
 
 class ReceptSerializer(serializers.ModelSerializer):
     ingredients = IngredientAmountReceptSerializer(many=True)
-    # ingredients = IngredientSerializer(many=True)
-    # ingredients = serializers.SerializerMethodField()
     image = Base64ImageField()
     author = SimpleUserSerializer(read_only=True)
     tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(),
                                               many=True)
-    # tags = TagSerializer(many=True)
-    # is_favorited = serializers.SerializerMethodField()
-    # is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = Recept
@@ -136,8 +131,6 @@ class ReceptSerializer(serializers.ModelSerializer):
             'name',
             'text',
             'cooking_time',
-            # 'is_favorited',
-            # 'is_in_shopping_cart'
         )
 
     def validate_tags(self, tags):
@@ -213,3 +206,9 @@ class ShoppingListSerializer(serializers.ModelSerializer):
             'image',
             'cooking_time'
         )
+
+
+# class FavouritesSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Favourites
+#         fields = ("user", "recept")

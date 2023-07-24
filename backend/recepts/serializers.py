@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
@@ -115,15 +116,10 @@ class ReceptReadSerializer(serializers.ModelSerializer):
 
 class ReceptSerializer(serializers.ModelSerializer):
     ingredients = IngredientAmountReceptSerializer(many=True)
-    # ingredients = IngredientSerializer(many=True)
-    # ingredients = serializers.SerializerMethodField()
     image = Base64ImageField()
     author = SimpleUserSerializer(read_only=True)
     tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(),
                                               many=True)
-    # tags = TagSerializer(many=True)
-    # is_favorited = serializers.SerializerMethodField()
-    # is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = Recept
@@ -136,8 +132,6 @@ class ReceptSerializer(serializers.ModelSerializer):
             'name',
             'text',
             'cooking_time',
-            # 'is_favorited',
-            # 'is_in_shopping_cart'
         )
 
     def validate_tags(self, tags):
@@ -196,12 +190,6 @@ class ReceptSerializer(serializers.ModelSerializer):
                 amount=ingredient.get('amount')
             )
         return super().update(instance, validated_data)
-
-    # def to_representation(self, instance):
-    #     request = self.context.get('request')
-    #     context = {'request': request}
-    #     return ReceptReadSerializer(
-    #         instance, context=context).data
 
 
 class ShoppingListSerializer(serializers.ModelSerializer):

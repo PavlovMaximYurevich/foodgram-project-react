@@ -1,8 +1,6 @@
 import re
-from datetime import datetime as dt
+
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from django.db import IntegrityError
-from django.shortcuts import get_object_or_404
 from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
@@ -164,11 +162,3 @@ class FollowReadSerializer(serializers.ModelSerializer):
         return user.is_authenticated and Follow.objects.filter(
             user=user.id, author=obj.id
         ).exists()
-
-    # def to_representation(self, instance):
-    #     request = self.context.get('request')
-    #     context = {'request': request}
-    #     return SubscriptionRead(
-    #         instance, context=context).data
-    # # def to_internal_value(self, data):
-    #     return data

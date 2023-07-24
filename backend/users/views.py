@@ -7,7 +7,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from .models import User, Follow
-from .serializers import FollowSerializer, FollowReadSerializer, SubscriptionRead
+from .serializers import FollowReadSerializer
 from djoser.views import UserViewSet
 
 
@@ -25,7 +25,6 @@ class SimpleUserViewSet(UserViewSet):
         user = request.user
         followers = User.objects.filter(following__user=user)
         results = self.paginate_queryset(followers)
-        print(results)
         serializer = FollowReadSerializer(
             results,
             many=True,
@@ -39,9 +38,7 @@ class SimpleUserViewSet(UserViewSet):
     )
     def subscribe(self, request, id):
         user = request.user
-        print(user)
         author = get_object_or_404(User, id=id)
-        print(author)
         if self.request.method == 'POST':
             if Follow.objects.filter(author=author, user=user).exists():
                 raise ValidationError('уже подписан')

@@ -45,7 +45,7 @@ class SimpleUserViewSet(UserViewSet):
         if self.request.method == 'POST':
             if Follow.objects.filter(author=author, user=user).exists():
                 raise ValidationError('уже подписан')
-            # Follow.objects.create(user=user, author=author)
+            Follow.objects.create(user=user, author=author)
             serializer = FollowReadSerializer(
                 author,
                 data=request.data,

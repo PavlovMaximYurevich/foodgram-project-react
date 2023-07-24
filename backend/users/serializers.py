@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator, UniqueTogetherValidator
 
+from recepts.models import Recept
 from .models import User, Follow
 
 CHECK_USERNAME = r'^[\w.@+-]+'
@@ -33,7 +34,8 @@ class SimpleUserSerializer(UserSerializer):
                   'id',
                   # 'role',
                   # 'password',
-                  'is_subscribed')
+                  'is_subscribed'
+                  )
 
     def get_is_subscribed(self, obj):
         user = self.context.get('request').user
@@ -111,3 +113,69 @@ class FollowSerializer(serializers.ModelSerializer):
                 'Нельзя подписаться на себя!'
             )
         return data
+
+
+class SubscriptionRead(serializers.ModelSerializer):
+
+    class Meta:
+        model = Recept
+        fields = (
+            'id',
+            'name',
+            'image',
+            'cooking_time'
+        )
+    # def to_internal_value(self, data):
+    #     return data
+
+
+class FollowReadSerializer(serializers.ModelSerializer):
+    email = serializers.ReadOnlyField(source='author.email')
+    id = serializers.ReadOnlyField(source='author.id')
+    username = serializers.ReadOnlyField(source='author.username')
+    first_name = serializers.ReadOnlyField(source='author.first_name')
+    last_name = serializers.ReadOnlyField(source='author.last_name')
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Follow
+        fields = (
+            "email",
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "is_subscribed",
+            "recipes",
+            "recipes_count"
+        )
+
+    def get_recipes(self, obj):
+        queryset = Recept.objects.filter(author=obj)
+        if queryset:
+            serializer = SubscriptionRead(
+                queryset,
+                context={'request': self.context.get('request')},
+                many=True
+            )
+            return serializer.data
+
+    def get_recipes_count(self, obj):
+        queryset = Recept.objects.filter(author=obj).count()
+        return queryset
+
+    def get_is_subscribed(self, obj):
+        user = self.context.get('request').user
+        return user.is_authenticated and Follow.objects.filter(
+            user=user.id, author=obj.id
+        ).exists()
+
+    # def to_representation(self, instance):
+    #     request = self.context.get('request')
+    #     context = {'request': request}
+    #     return SubscriptionRead(
+    #         instance, context=context).data
+    # def to_internal_value(self, data):
+    #     return data

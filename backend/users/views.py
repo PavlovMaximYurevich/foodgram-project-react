@@ -6,7 +6,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from .models import User, Follow
-from .serializers import FollowSerializer
+from .serializers import FollowSerializer, FollowReadSerializer
 from djoser.views import UserViewSet
 
 
@@ -20,22 +20,31 @@ class SimpleUserViewSet(UserViewSet):
         methods=['get'],
         detail=False,
     )
-    def follower_list(self, request):
+    def subscriptions(self, request):
         user = request.user
-        queryset = Follow.objects.filter(user=user)
-        pages = self.paginate_queryset(queryset)
-        serializer = FollowSerializer(
-            pages,
+
+        followers = User.objects.filter(following__user=user)
+        # queryset = Follow.objects.filter(follower=user)
+        print(followers)
+        # print(queryset)
+        pages = self.paginate_queryset(followers)
+        print(pages)
+        serializer = FollowReadSerializer(
+            # pages,
+            followers,
+            # queryset,
             many=True,
             context={'request': request}
         )
+        print(serializer.data)
         return self.get_paginated_response(serializer.data)
+        # return serializer.data
 
     @action(
         detail=True,
         methods=['post', 'delete'],
     )
-    def follow(self, request, **kwargs):
+    def subscribe(self, request, **kwargs):
         user = request.user
         id_author = self.kwargs.get('id')
         author = get_object_or_404(User, id=id_author)

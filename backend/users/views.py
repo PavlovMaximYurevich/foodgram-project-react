@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.pagination import LimitOffsetPagination
@@ -6,7 +7,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from .models import User, Follow
-from .serializers import FollowSerializer, FollowReadSerializer
+from .serializers import FollowSerializer, FollowReadSerializer, SubscriptionRead
 from djoser.views import UserViewSet
 
 
@@ -36,20 +37,24 @@ class SimpleUserViewSet(UserViewSet):
         detail=True,
         methods=['post', 'delete'],
     )
-    def subscribe(self, request, **kwargs):
+    def subscribe(self, request, id):
         user = request.user
-        id_author = self.kwargs.get('id')
-        author = get_object_or_404(User, id=id_author)
-        follower = get_object_or_404(Follow, user=user, author=author)
-        if request.method == 'POST':
-            serializer = FollowSerializer(
+        print(user)
+        author = get_object_or_404(User, id=id)
+        print(author)
+        if self.request.method == 'POST':
+            if Follow.objects.filter(author=author, user=user).exists():
+                raise ValidationError('уже подписан')
+            # Follow.objects.create(user=user, author=author)
+            serializer = FollowReadSerializer(
                 author,
                 data=request.data,
                 context={'request': request}
             )
             serializer.is_valid(raise_exception=True)
-            Follow.objects.create(user=user, author=author)
+            print(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         if request.method == 'DELETE':
+            follower = get_object_or_404(Follow, user=user, author=author)
             follower.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)

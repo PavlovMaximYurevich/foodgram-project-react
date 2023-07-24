@@ -22,23 +22,15 @@ class SimpleUserViewSet(UserViewSet):
     )
     def subscriptions(self, request):
         user = request.user
-
         followers = User.objects.filter(following__user=user)
-        # queryset = Follow.objects.filter(follower=user)
-        print(followers)
-        # print(queryset)
-        pages = self.paginate_queryset(followers)
-        print(pages)
+        results = self.paginate_queryset(followers)
+        print(results)
         serializer = FollowReadSerializer(
-            # pages,
-            followers,
-            # queryset,
+            results,
             many=True,
             context={'request': request}
         )
-        print(serializer.data)
         return self.get_paginated_response(serializer.data)
-        # return serializer.data
 
     @action(
         detail=True,

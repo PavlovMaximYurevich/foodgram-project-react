@@ -125,22 +125,15 @@ class SubscriptionRead(serializers.ModelSerializer):
             'image',
             'cooking_time'
         )
-    # def to_internal_value(self, data):
-    #     return data
 
 
 class FollowReadSerializer(serializers.ModelSerializer):
-    email = serializers.ReadOnlyField(source='author.email')
-    id = serializers.ReadOnlyField(source='author.id')
-    username = serializers.ReadOnlyField(source='author.username')
-    first_name = serializers.ReadOnlyField(source='author.first_name')
-    last_name = serializers.ReadOnlyField(source='author.last_name')
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
-        model = Follow
+        model = User
         fields = (
             "email",
             "id",

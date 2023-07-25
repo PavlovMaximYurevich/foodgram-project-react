@@ -56,7 +56,7 @@ class ReceptViews(viewsets.ModelViewSet):
         methods=['POST', 'DELETE'],
         detail=True,
     )
-    def shopping_card(self, request, pk):
+    def shopping_cart(self, request, pk):
         recept = get_object_or_404(Recept, pk=pk)
         user = self.request.user
         if self.request.method == 'POST':
@@ -77,7 +77,7 @@ class ReceptViews(viewsets.ModelViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False)
-    def download_shopping_card(self, request):
+    def download_shopping_cart(self, request):
         user = request.user
         ingredients = IngridientAmount.objects.filter(
             recept__user_shopper__user=user.id
@@ -85,18 +85,19 @@ class ReceptViews(viewsets.ModelViewSet):
             'ingredient__name',
             'ingredient__measurement_unit'
         ).annotate(amount=Sum('amount'))
-
+        shopping_list = ''
+        result = [(i.values()) for i in ingredients]
+        for items in result:
+            for item in items:
+                shopping_list += str(item)+' '
+            shopping_list += '\n'
         response = HttpResponse(
+            shopping_list,
             content_type="text/csv",
             headers={
                 "Content-Disposition": 'attachment; filename="shopper.csv"'
             },
         )
-        writer = csv.writer(response)
-        writer.writerow(ingredients)
-        for ingredient in list(ingredients):
-            # print(list(ingredient.values()))
-            writer.writerow(ingredient.values())
         return response
 
     def get_serializer_class(self):

@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from recepts.models import *
+from recepts.models import (IngridientAmount,
+                            Recept,
+                            Ingredients,
+                            Tag,
+                            Favourites,
+                            ShoppingList)
 
 
 class IngredientsInReceptAdmin(admin.TabularInline):
@@ -14,8 +19,6 @@ class ReceptAdmin(admin.ModelAdmin):
         'author',
         'name',
         'text',
-        # 'ingredients',
-        # 'tags',
         'cooking_time'
     )
 

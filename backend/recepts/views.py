@@ -1,5 +1,4 @@
-import csv
-
+from django.core.exceptions import ValidationError
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -7,8 +6,17 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from recepts.models import *
-from recepts.serializers import *
+from recepts.models import (Ingredients,
+                            Recept,
+                            IngridientAmount,
+                            Favourites,
+                            ShoppingList,
+                            Tag)
+from recepts.serializers import (ReceptSerializer,
+                                 TagSerializer,
+                                 IngredientSerializer,
+                                 ShoppingListSerializer,
+                                 ReceptReadSerializer)
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -89,7 +97,7 @@ class ReceptViews(viewsets.ModelViewSet):
         result = [(i.values()) for i in ingredients]
         for items in result:
             for item in items:
-                shopping_list += str(item)+' '
+                shopping_list += str(item) + ' '
             shopping_list += '\n'
         response = HttpResponse(
             shopping_list,

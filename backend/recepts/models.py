@@ -8,7 +8,6 @@ class Tag(models.Model):
     name = models.CharField(
         'Название тэга',
         max_length=200,
-        blank=False,
         unique=True,
     )
     color = models.CharField(
@@ -33,12 +32,10 @@ class Tag(models.Model):
 class Ingredients(models.Model):
     name = models.CharField(
         'Название ингридиента',
-        blank=False,
         max_length=200
     )
     measurement_unit = models.CharField(
         'Единица измерения',
-        blank=False,
         max_length=200
     )
 

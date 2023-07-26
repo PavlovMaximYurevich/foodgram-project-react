@@ -1,19 +1,17 @@
 from django.core.exceptions import ValidationError
+from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from .models import User, Follow
+from .models import Follow, User
 from .serializers import FollowReadSerializer
-from djoser.views import UserViewSet
 
 
 class SimpleUserViewSet(UserViewSet):
-    # queryset = User.objects.all()
-    # serializer_class = SimpleUserSerializer
     pagination_class = LimitOffsetPagination
     permission_classes = (IsAuthenticated,)
 

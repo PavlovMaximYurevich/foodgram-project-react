@@ -1,6 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from .views import TagViewSet, IngridientsViewSet, ReceptViews
+
+from .views import IngridientsViewSet, ReceptViews, TagViewSet
 
 app_name = 'recepts'
 

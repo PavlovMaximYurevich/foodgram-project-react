@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from recepts.models import Ingredients, IngridientAmount, Recept, Tag
 from users.serializers import SimpleUserSerializer
@@ -14,9 +15,10 @@ class TagSerializer(serializers.ModelSerializer):
         CHECK_COLOR,
         max_length=7,
     )
-    slug = serializers.RegexField(
-        CHECK_SLUG,
-        max_length=200
+    slug = serializers.SlugRelatedField(
+        # max_length=200,
+        slug_field='tag',
+        read_only=True
     )
 
     class Meta:
@@ -32,7 +34,7 @@ class TagSerializer(serializers.ModelSerializer):
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredients
-        fields = '__all__'
+        fields = ('name', 'measurement_unit')
 
 
 class AllIngredientInReceptSerializer(serializers.ModelSerializer):
@@ -97,15 +99,17 @@ class ReceptReadSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, obj):
         user = self.context.get('request').user
-        if user.is_anonymous:
-            return False
-        return user.favourite.filter(recept=obj).exists()
+        return (
+            user.is_authenticated
+            and user.favourite.filter(recept=obj).exists()
+        )
 
     def get_is_in_shopping_cart(self, obj):
         user = self.context.get('request').user
-        if user.is_anonymous:
-            return False
-        return user.user_shopper.filter(recept=obj).exists()
+        return (
+            user.is_authenticated
+            and user.user_shopper.filter(recept=obj).exists()
+        )
 
 
 class ReceptSerializer(serializers.ModelSerializer):

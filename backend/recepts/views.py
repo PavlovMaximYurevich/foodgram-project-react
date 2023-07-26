@@ -22,14 +22,12 @@ from recepts.serializers import (ReceptSerializer,
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    # permission_classes = pass
 
 
 class IngridientsViewSet(viewsets.ModelViewSet):
     queryset = Ingredients.objects.all()
     serializer_class = IngredientSerializer
     search_fields = ('name',)
-    # permission_classes = pass
 
 
 class ReceptViews(viewsets.ModelViewSet):

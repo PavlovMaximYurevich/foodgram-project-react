@@ -1,9 +1,14 @@
 import os
+
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'fyxb2w4s)sl@f1su11p_-oztak8^3(7_64!@a+2)rb$g-+7#e#'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-123')
+# SECRET_KEY='fyxb2w4s)sl@f1su11p_-oztak8^3(7_64!@a+2)rb$g-+7#e#'
 
 DEBUG = True
 
@@ -23,7 +28,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'recepts.apps.ReceptsConfig',
     'recepts.management',
-    # 'colorfield'
+    'colorfield',
 ]
 
 MIDDLEWARE = [

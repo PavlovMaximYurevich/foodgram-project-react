@@ -1,7 +1,10 @@
-from django.core.validators import MinValueValidator
+from colorfield.fields import ColorField
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from users.models import User
+
+MAX_SYMBOLS = 20
 
 
 class Tag(models.Model):
@@ -10,10 +13,10 @@ class Tag(models.Model):
         max_length=200,
         unique=True,
     )
-    color = models.CharField(
+    color = ColorField(
         'Цвет',
-        max_length=7,
         unique=True,
+        max_length=7
     )
     slug = models.SlugField(
         'Уникальный идентификатор тэга',
@@ -26,7 +29,7 @@ class Tag(models.Model):
         verbose_name_plural = 'Тэги'
 
     def __str__(self):
-        return self.name
+        return self.name[:MAX_SYMBOLS]
 
 
 class Ingredients(models.Model):
@@ -50,7 +53,7 @@ class Ingredients(models.Model):
         ]
 
     def __str__(self):
-        return self.name
+        return self.name[:MAX_SYMBOLS]
 
 
 class Recept(models.Model):
@@ -95,53 +98,103 @@ class Recept(models.Model):
         verbose_name_plural = 'рецепты'
 
     def __str__(self):
-        return self.name
+        return self.name[:MAX_SYMBOLS]
 
 
-class Favourites(models.Model):
+# class Favourites(models.Model):
+#     user = models.ForeignKey(
+#         User,
+#         on_delete=models.CASCADE,
+#         related_name='favourite',
+#         verbose_name='Пользователь'
+#     )
+#     recept = models.ForeignKey(
+#         Recept,
+#         on_delete=models.CASCADE,
+#         related_name='favourite',
+#         verbose_name='Рецепт'
+#     )
+#
+#     class Meta:
+#         verbose_name = 'Избранное',
+#         constraints = [
+#             models.UniqueConstraint(
+#                 fields=['user', 'recept'],
+#                 name='unique_favourite'
+#             )
+#         ]
+#
+#     def __str__(self):
+#         return (
+#             f'У пользователя {self.user} рецепт в избранном- {self.recept}'
+#         )
+#
+#
+# class ShoppingList(models.Model):
+#     user = models.ForeignKey(
+#         User,
+#         on_delete=models.CASCADE,
+#         verbose_name='Пользователь',
+#         related_name='user_shopper',
+#     )
+#     recept = models.ForeignKey(
+#         Recept,
+#         on_delete=models.CASCADE,
+#         related_name='user_shopper',
+#         verbose_name='Рецепт'
+#     )
+#
+#     class Meta:
+#         verbose_name = 'Список покупок',
+#         verbose_name_plural = 'Списки покупок',
+#         constraints = [
+#             models.UniqueConstraint(
+#                 fields=['user', 'recept'],
+#                 name='unique_shopping_list'
+#             )
+#         ]
+
+
+class AbstractModel(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='favourite',
         verbose_name='Пользователь'
     )
     recept = models.ForeignKey(
         Recept,
         on_delete=models.CASCADE,
-        related_name='favourite',
         verbose_name='Рецепт'
     )
 
     class Meta:
+        abstract = True
+
+
+class Favourites(AbstractModel):
+
+    class Meta:
+        default_related_name = 'favourite'
         verbose_name = 'Избранное',
+        verbose_name_plural = 'Избранное'
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recept'],
-                name='unique_favourite'
+                name='unique_favourites'
             )
         ]
 
     def __str__(self):
         return (
-            f'У пользователя {self.user} рецепт в избранном- {self.recept}'
+            f'У пользователя {self.user}'
+            f' рецепт в избранном- {self.recept}'[:MAX_SYMBOLS]
         )
 
 
-class ShoppingList(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        verbose_name='Пользователь',
-        related_name='user_shopper',
-    )
-    recept = models.ForeignKey(
-        Recept,
-        on_delete=models.CASCADE,
-        related_name='user_shopper',
-        verbose_name='Рецепт'
-    )
+class ShoppingList(AbstractModel):
 
     class Meta:
+        default_related_name = 'user_shopper'
         verbose_name = 'Список покупок',
         verbose_name_plural = 'Списки покупок',
         constraints = [
@@ -163,13 +216,18 @@ class IngridientAmount(models.Model):
         verbose_name='Рецепт',
         on_delete=models.CASCADE
     )
-    amount = models.PositiveIntegerField(
+    amount = models.PositiveSmallIntegerField(
         'Количество',
-        validators=[
+        validators=(
             MinValueValidator(
-                1, message='количество должно быть положительным числом'
+                1,
+                message='количество должно быть положительным числом'
+            ),
+            MaxValueValidator(
+                1000,
+                message='Вы уверены, что вы съедите столько?'
             )
-        ]
+        )
     )
 
     class Meta:

@@ -1,13 +1,11 @@
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 
 from recepts.models import Ingredients, IngridientAmount, Recept, Tag
 from users.serializers import SimpleUserSerializer
 
 CHECK_COLOR = r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$'
-CHECK_SLUG = r'^[-a-zA-Z0-9_]+$'
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -16,14 +14,8 @@ class TagSerializer(serializers.ModelSerializer):
         max_length=7,
     )
     slug = serializers.SlugField(
-        max_length=200,
-        # slug_field='tag',
-        # read_only=True
+        max_length=200
     )
-    # slug = serializers.RegexField(
-    #     CHECK_SLUG,
-    #     max_length=200
-    # )
 
     class Meta:
         model = Tag

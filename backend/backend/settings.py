@@ -21,9 +21,9 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'users.apps.UsersConfig',
-    # 'api.apps.ApiConfig',
     'recepts.apps.ReceptsConfig',
     'recepts.management',
+    # 'colorfield'
 ]
 
 MIDDLEWARE = [
@@ -111,6 +111,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 AUTH_USER_MODEL = "users.User"
 

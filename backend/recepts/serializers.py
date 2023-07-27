@@ -15,11 +15,15 @@ class TagSerializer(serializers.ModelSerializer):
         CHECK_COLOR,
         max_length=7,
     )
-    slug = serializers.SlugRelatedField(
-        # max_length=200,
-        slug_field='tag',
-        read_only=True
+    slug = serializers.SlugField(
+        max_length=200,
+        # slug_field='tag',
+        # read_only=True
     )
+    # slug = serializers.RegexField(
+    #     CHECK_SLUG,
+    #     max_length=200
+    # )
 
     class Meta:
         model = Tag

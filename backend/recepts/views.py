@@ -5,7 +5,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
+from recepts.filters import IngredientsFilter, ReceptFilter
 from recepts.models import (Ingredients,
                             Recept,
                             IngridientAmount,
@@ -27,12 +29,16 @@ class TagViewSet(viewsets.ModelViewSet):
 class IngridientsViewSet(viewsets.ModelViewSet):
     queryset = Ingredients.objects.all()
     serializer_class = IngredientSerializer
-    search_fields = ('name',)
+    search_fields = ('name', )
+    filter_backends = (DjangoFilterBackend, )
+    filterset_class = IngredientsFilter
 
 
 class ReceptViews(viewsets.ModelViewSet):
     queryset = Recept.objects.all()
     serializer_class = ReceptSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = ReceptFilter
 
     @action(
         methods=['POST', 'DELETE'],

@@ -101,60 +101,6 @@ class Recept(models.Model):
         return self.name[:MAX_SYMBOLS]
 
 
-# class Favourites(models.Model):
-#     user = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE,
-#         related_name='favourite',
-#         verbose_name='Пользователь'
-#     )
-#     recept = models.ForeignKey(
-#         Recept,
-#         on_delete=models.CASCADE,
-#         related_name='favourite',
-#         verbose_name='Рецепт'
-#     )
-#
-#     class Meta:
-#         verbose_name = 'Избранное',
-#         constraints = [
-#             models.UniqueConstraint(
-#                 fields=['user', 'recept'],
-#                 name='unique_favourite'
-#             )
-#         ]
-#
-#     def __str__(self):
-#         return (
-#             f'У пользователя {self.user} рецепт в избранном- {self.recept}'
-#         )
-#
-#
-# class ShoppingList(models.Model):
-#     user = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE,
-#         verbose_name='Пользователь',
-#         related_name='user_shopper',
-#     )
-#     recept = models.ForeignKey(
-#         Recept,
-#         on_delete=models.CASCADE,
-#         related_name='user_shopper',
-#         verbose_name='Рецепт'
-#     )
-#
-#     class Meta:
-#         verbose_name = 'Список покупок',
-#         verbose_name_plural = 'Списки покупок',
-#         constraints = [
-#             models.UniqueConstraint(
-#                 fields=['user', 'recept'],
-#                 name='unique_shopping_list'
-#             )
-#         ]
-
-
 class AbstractModel(models.Model):
     user = models.ForeignKey(
         User,

@@ -24,6 +24,7 @@ from recepts.serializers import (ReceptSerializer,
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    pagination_classes = None
 
 
 class IngridientsViewSet(viewsets.ModelViewSet):

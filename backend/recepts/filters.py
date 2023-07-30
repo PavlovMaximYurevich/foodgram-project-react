@@ -20,12 +20,12 @@ class ReceptFilter(filters.FilterSet):
         model = Recept
         fields = ('author', 'tags')
 
-    def get_is_favorited(self, qs, value):
+    def get_is_favorited(self, qs, name, value):
         if self.request.user.is_authenticated and value:
             return qs.filter(favourite__user=self.request.user)
         return qs
 
-    def get_is_in_shopping_cart(self, qs, value):
+    def get_is_in_shopping_cart(self, qs, name, value):
         if self.request.user.is_authenticated and value:
             return qs.filter(user_shopper__user=self.request.user)
         return qs

@@ -33,6 +33,7 @@ class IngridientsViewSet(viewsets.ModelViewSet):
     search_fields = ('name', )
     filter_backends = (DjangoFilterBackend, )
     filterset_class = IngredientsFilter
+    pagination_classes = None
 
 
 class ReceptViews(viewsets.ModelViewSet):

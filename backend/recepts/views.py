@@ -24,7 +24,7 @@ from recepts.serializers import (ReceptSerializer,
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    pagination_classes = None
+    pagination_class = None
 
 
 class IngridientsViewSet(viewsets.ModelViewSet):
@@ -33,7 +33,7 @@ class IngridientsViewSet(viewsets.ModelViewSet):
     search_fields = ('name', )
     filter_backends = (DjangoFilterBackend, )
     filterset_class = IngredientsFilter
-    pagination_classes = None
+    pagination_class = None
 
 
 class ReceptViews(viewsets.ModelViewSet):

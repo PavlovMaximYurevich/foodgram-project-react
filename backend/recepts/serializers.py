@@ -185,6 +185,13 @@ class ReceptSerializer(serializers.ModelSerializer):
             )
         return super().update(instance, validated_data)
 
+    def to_representation(self, instance):
+        serializer = ReceptReadSerializer(
+            instance,
+            context={'request': self.context.get('request')}
+        )
+        return serializer.data
+
 
 class ShoppingListSerializer(serializers.ModelSerializer):
     class Meta:

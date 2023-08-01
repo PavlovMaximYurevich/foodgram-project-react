@@ -21,6 +21,7 @@ services:
       - media:/app/media/
 
   frontend:
+    command: cp -r /app/result_build/. /frontend_static/
     build:
       context: ../frontend
       dockerfile: Dockerfile

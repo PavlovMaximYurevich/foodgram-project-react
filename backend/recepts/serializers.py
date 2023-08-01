@@ -30,7 +30,7 @@ class TagSerializer(serializers.ModelSerializer):
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredients
-        fields = ('name', 'measurement_unit')
+        fields = ('id', 'name', 'measurement_unit')
 
 
 class AllIngredientInReceptSerializer(serializers.ModelSerializer):

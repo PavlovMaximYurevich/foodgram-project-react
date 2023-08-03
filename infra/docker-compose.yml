@@ -21,12 +21,12 @@ services:
       - media:/app/media/
 
   frontend:
-    command: cp -r /app/result_build/. /frontend_static/
+    command: cp -r /app/build/. /frontend_static/
     build:
       context: ../frontend
       dockerfile: Dockerfile
     volumes:
-      - ../frontend/:/app/result_build/
+      - static:/frontend_static
 
   nginx:
     image: nginx:1.19.3

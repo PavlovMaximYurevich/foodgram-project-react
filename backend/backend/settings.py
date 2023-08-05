@@ -9,10 +9,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-123')
 
-DEBUG = True
+DEBUG = False
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '158.160.65.223', 'foodgram-project.servemp3.com']
+ALLOWED_HOSTS = [os.getenv('WORK_HOST')]
 
 INSTALLED_APPS = [
     'django.contrib.admin',

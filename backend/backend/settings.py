@@ -8,12 +8,11 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-123')
-# SECRET_KEY='fyxb2w4s)sl@f1su11p_-oztak8^3(7_64!@a+2)rb$g-+7#e#'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '158.160.65.223', 'foodgram-project.servemp3.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',

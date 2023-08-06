@@ -144,11 +144,11 @@ class ReceptSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Не выбрано ни одного ингридиента'
             )
-        for ingredient in ingredients:
-            if ingredient in ingredients:
-                raise serializers.ValidationError(
-                    'Вы добавляете одно и то же'
-                )
+        # for ingredient in ingredients:
+        #     if ingredient in ingredients:
+        #         raise serializers.ValidationError(
+        #             'Вы добавляете одно и то же'
+        #         )
         all_ingredients = [ingredient['id'] for ingredient in ingredients]
         if len(all_ingredients) != len(set(all_ingredients)):
             raise serializers.ValidationError(

@@ -30,8 +30,6 @@ class SimpleUserSerializer(UserSerializer):
                   'first_name',
                   'last_name',
                   'id',
-                  # 'role',
-                  # 'password',
                   'is_subscribed'
                   )
 

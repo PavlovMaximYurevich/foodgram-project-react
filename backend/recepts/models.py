@@ -66,7 +66,7 @@ class Recept(models.Model):
     name = models.CharField(
         'Название рецепта',
         max_length=200,
-        unique=True,
+        # unique=True,
         help_text='Придумайте название рецепта'
     )
     image = models.ImageField(
@@ -75,6 +75,7 @@ class Recept(models.Model):
     )
     text = models.TextField(
         'Подробное описание рецепта',
+        unique=True,
         help_text='Опишите детально рецепт'
     )
     ingredients = models.ManyToManyField(
@@ -92,10 +93,15 @@ class Recept(models.Model):
         'Время приготовления в минутах',
         help_text='Укажите время приготовления в минутах'
     )
+    pub_date = models.DateTimeField(
+        'Дата добавления',
+        auto_now_add=True
+    )
 
     class Meta:
         verbose_name = 'рецепт'
         verbose_name_plural = 'рецепты'
+        ordering = ('-pub_date', )
 
     def __str__(self):
         return self.name[:MAX_SYMBOLS]

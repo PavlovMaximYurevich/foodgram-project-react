@@ -26,14 +26,6 @@ class TagSerializer(serializers.ModelSerializer):
             'slug'
         )
 
-    def validate(self, data):
-        color = data.get('color')
-        if color == color.upper():
-            raise serializers.ValidationError(
-                'Одинаковый цвет'
-            )
-        return data
-
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:

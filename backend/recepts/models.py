@@ -16,7 +16,7 @@ class Tag(models.Model):
     color = ColorField(
         'Цвет',
         unique=True,
-        max_length=7
+        max_length=7,
     )
     slug = models.SlugField(
         'Уникальный идентификатор тэга',
@@ -30,6 +30,10 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name[:MAX_SYMBOLS]
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.value = self.color.upper()
+        return super(Tag, self).save(force_insert, force_update, using, update_fields)
 
 
 class Ingredients(models.Model):
@@ -66,11 +70,10 @@ class Recept(models.Model):
     name = models.CharField(
         'Название рецепта',
         max_length=200,
-        # unique=True,
         help_text='Придумайте название рецепта'
     )
     image = models.ImageField(
-        verbose_name='Фото рецепта',
+        'Фото рецепта',
         upload_to='recepts/',
     )
     text = models.TextField(

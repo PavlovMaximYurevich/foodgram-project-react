@@ -10,6 +10,7 @@ from recepts.models import (Favourites,
 
 class IngredientsInReceptAdmin(admin.TabularInline):
     model = IngridientAmount
+    min_num = 1
 
 
 class ReceptAdmin(admin.ModelAdmin):

@@ -33,15 +33,11 @@ class Tag(models.Model):
         return self.name[:MAX_SYMBOLS]
 
     def clean(self):
-        if self.color:
-            self.color = self.color.lower()
-        if Tag.objects.filter(color=self.color).exists():
-            raise ValidationError("Такой тэг уже есть")
-        # color = self.color.upper()
-        # if Tag.objects.filter(color=color).exists():
-        #     raise ValidationError(
-        #         'Такой тэг есть'
-        #     )
+        color = self.color.upper()
+        if Tag.objects.filter(color=color).exists():
+            raise ValidationError(
+                'Такой цвет есть'
+            )
 
 
 class Ingredients(models.Model):

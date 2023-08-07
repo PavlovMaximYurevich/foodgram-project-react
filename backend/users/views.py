@@ -39,11 +39,7 @@ class SimpleUserViewSet(UserViewSet):
         author = get_object_or_404(User, id=id)
         if self.request.method == 'POST':
             if Follow.objects.filter(author=author, user=user).exists():
-                content = {'errors': 'Нельзя подписаться на себя'}
-                # raise ValidationError('уже подписан')
-                return Response(content,
-                                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                                )
+                raise ValidationError('уже подписан')
             Follow.objects.create(user=user, author=author)
             serializer = FollowReadSerializer(
                 author,

@@ -149,6 +149,17 @@ class ReceptSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Ингридиенты не уникальны!'
             )
+        all_ingredients = ingredients["ingredients"]
+        ingredients_list = []
+        for ingredient in all_ingredients:
+            one_ingredient = get_object_or_404(
+                Ingredients, id=ingredient['id']
+            )
+            if one_ingredient in ingredients_list:
+                raise serializers.ValidationError(
+                    'Такой ингридиент уже присутствует'
+                )
+            ingredients_list.append(one_ingredient)
         return ingredients
 
     def create(self, validated_data):

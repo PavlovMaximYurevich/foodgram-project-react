@@ -33,7 +33,7 @@ class Tag(models.Model):
         return self.name[:MAX_SYMBOLS]
 
     def clean(self):
-        self.color = self.color.upper()
+        # self.color = self.color.upper()
         if Tag.objects.filter(color=self.color).exists():
             raise ValidationError(
                 'Такой тэг есть'

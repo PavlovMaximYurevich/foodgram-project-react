@@ -28,7 +28,7 @@ class FollowAdmin(admin.ModelAdmin):
 class AnswerForm(forms.ModelForm):
     class Meta:
         model = Follow
-        # fields = ('question_id', 'aswer_text', 'true_answer',)
+        fields = ('user', 'author')
         # readonly_fields = ('question_id',)
 
     def clean(self):

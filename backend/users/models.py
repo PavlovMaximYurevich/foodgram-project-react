@@ -91,4 +91,3 @@ class Follow(models.Model):
     def clean(self):
         if self.user == self.author:
             raise ValidationError('Нельзя подписаться на самого себя')
-        # super(Follow, self).clean()

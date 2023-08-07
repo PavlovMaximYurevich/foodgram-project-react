@@ -149,7 +149,10 @@ class ReceptSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Ингридиенты не уникальны!'
             )
-        all_ingredients = ingredients["ingredients"]
+        return ingredients
+
+    def validate(self, attrs):
+        all_ingredients = attrs["ingredients"]
         ingredients_list = []
         for ingredient in all_ingredients:
             one_ingredient = get_object_or_404(
@@ -160,7 +163,7 @@ class ReceptSerializer(serializers.ModelSerializer):
                     'Такой ингридиент уже присутствует'
                 )
             ingredients_list.append(one_ingredient)
-        return ingredients
+        return attrs
 
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')

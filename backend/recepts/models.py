@@ -1,4 +1,5 @@
 from colorfield.fields import ColorField
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
@@ -30,6 +31,13 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name[:MAX_SYMBOLS]
+
+    def clean(self):
+        self.color = self.color.upper()
+        if Tag.objects.filter(color=self.color).exists():
+            raise ValidationError(
+                'Такой тэг есть'
+            )
 
 
 class Ingredients(models.Model):

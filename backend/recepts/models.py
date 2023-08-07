@@ -32,12 +32,16 @@ class Tag(models.Model):
     def __str__(self):
         return self.name[:MAX_SYMBOLS]
 
-    # def clean(self):
-    #     color = self.color.upper()
-    #     if Tag.objects.filter(color=color).exists():
-    #         raise ValidationError(
-    #             'Такой тэг есть'
-    #         )
+    def clean(self):
+        if self.color:
+            self.color = self.color.lower()
+        if Tag.objects.filter(color=self.color).exists():
+            raise ValidationError("Такой тэг уже есть")
+        # color = self.color.upper()
+        # if Tag.objects.filter(color=color).exists():
+        #     raise ValidationError(
+        #         'Такой тэг есть'
+        #     )
 
 
 class Ingredients(models.Model):

@@ -162,19 +162,19 @@ class ReceptSerializer(serializers.ModelSerializer):
             ingredients_list.append(one_ingredient)
         return ingredients
 
-    def validate(self, attrs):
-        all_ingredients = attrs["ingredients"]
-        ingredients_list = []
-        for ingredient in all_ingredients:
-            one_ingredient = get_object_or_404(
-                Ingredients, id=ingredient['id']
-            )
-            if one_ingredient in ingredients_list:
-                raise serializers.ValidationError(
-                    'Такой ингридиент уже присутствует'
-                )
-            ingredients_list.append(one_ingredient)
-        return attrs
+    # def validate(self, attrs):
+    #     all_ingredients = attrs["ingredients"]
+    #     ingredients_list = []
+    #     for ingredient in all_ingredients:
+    #         one_ingredient = get_object_or_404(
+    #             Ingredients, id=ingredient['id']
+    #         )
+    #         if one_ingredient in ingredients_list:
+    #             raise serializers.ValidationError(
+    #                 'Такой ингридиент уже присутствует'
+    #             )
+    #         ingredients_list.append(one_ingredient)
+    #     return attrs
 
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')

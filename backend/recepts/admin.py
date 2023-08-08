@@ -16,11 +16,11 @@ class IngredientsInReceptAdmin(admin.TabularInline):
     min_num = 1
     # can_delete = False
 
-    def clean(self):
-        if not self.model.ingredient:
-            raise ValidationError(
-                "Рецепт не может иметь 0 ингредиетов"
-            )
+    # def clean(self):
+    #     if not self.model.ingredient:
+    #         raise ValidationError(
+    #             "Рецепт не может иметь 0 ингредиетов"
+    #         )
 
 
 class ReceptAdmin(admin.ModelAdmin):

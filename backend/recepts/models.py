@@ -113,6 +113,10 @@ class Recept(models.Model):
     def __str__(self):
         return self.name[:MAX_SYMBOLS]
 
+    def clean(self):
+        if not self.ingredients:
+            raise ValidationError("Рецепт не может быть без ингридиентов")
+
 
 class AbstractModel(models.Model):
     user = models.ForeignKey(
@@ -166,7 +170,7 @@ class IngridientAmount(models.Model):
     ingredient = models.ForeignKey(
         Ingredients,
         verbose_name='Ингридиент',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     recept = models.ForeignKey(
         Recept,
@@ -197,6 +201,4 @@ class IngridientAmount(models.Model):
             )
         ]
 
-    def clean(self):
-        if not self.ingredient:
-            raise ValidationError("Рецепт не может быть без ингридиентов")
+

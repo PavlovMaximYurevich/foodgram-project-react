@@ -113,9 +113,9 @@ class Recept(models.Model):
     def __str__(self):
         return self.name[:MAX_SYMBOLS]
 
-    def clean(self):
-        if not self.ingredients:
-            raise ValidationError("Рецепт не может быть без ингридиентов")
+    # def clean(self):
+    #     if not self.ingredients:
+    #         raise ValidationError("Рецепт не может быть без ингридиентов")
 
 
 class AbstractModel(models.Model):

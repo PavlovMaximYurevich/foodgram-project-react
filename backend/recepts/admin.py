@@ -28,13 +28,6 @@ class ReceptAdmin(admin.ModelAdmin):
     search_fields = ('name', 'author')
     list_filter = ('name', 'author')
 
-    def get_actions(self, request):
-        actions = super().get_actions(request)
-        if actions.get('ingredients') == None:
-            raise ValidationError(
-                'Список ингридиентов пуст'
-            )
-
 
 class IngredientsAdmin(admin.ModelAdmin):
     list_display = (

@@ -157,12 +157,7 @@ class ReceptSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     'Такой ингридиент уже присутствует'
                 )
-
             ingredients_list.append(one_ingredient)
-            if ingredient['amount'] < 1:
-                raise serializers.ValidationError(
-                    'Количество не должно быть меньше 0'
-                )
         return attrs
 
     def create(self, validated_data):
@@ -184,19 +179,20 @@ class ReceptSerializer(serializers.ModelSerializer):
         return recept
 
     def update(self, instance, validated_data):
-        ingredients = validated_data.pop('ingredients')
-        tags = validated_data.pop('tags')
-        instance.ingredients.clear()
-        instance.tags.set(tags)
-        for ingredient in ingredients:
-            current_ingredient = get_object_or_404(
-                Ingredients, id=ingredient.get('id')
-            )
-            IngridientAmount.objects.create(
-                recept=instance,
-                ingredient=current_ingredient,
-                amount=ingredient.get('amount')
-            )
+        if 'ingredients' in validated_data:
+            ingredients = validated_data.pop('ingredients')
+            tags = validated_data.pop('tags')
+            instance.ingredients.clear()
+            instance.tags.set(tags)
+            for ingredient in ingredients:
+                current_ingredient = get_object_or_404(
+                    Ingredients, id=ingredient.get('id')
+                )
+                IngridientAmount.objects.create(
+                    recept=instance,
+                    ingredient=current_ingredient,
+                    amount=ingredient.get('amount')
+                )
         return super().update(instance, validated_data)
 
     def to_representation(self, instance):

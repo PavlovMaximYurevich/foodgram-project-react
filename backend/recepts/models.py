@@ -134,7 +134,7 @@ class Favourites(AbstractModel):
 
     class Meta:
         default_related_name = 'favourite'
-        verbose_name = 'Избранное',
+        verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
         constraints = [
             models.UniqueConstraint(
@@ -154,8 +154,8 @@ class ShoppingList(AbstractModel):
 
     class Meta:
         default_related_name = 'user_shopper'
-        verbose_name = 'Список покупок',
-        verbose_name_plural = 'Списки покупок',
+        verbose_name = 'Список покупок'
+        verbose_name_plural = 'Списки покупок'
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recept'],
@@ -190,8 +190,8 @@ class IngridientAmount(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Ингридиент в рецепте',
-        verbose_name_plural = 'Ингридиенты в рецепте',
+        verbose_name = 'Ингридиент в рецепте'
+        verbose_name_plural = 'Ингридиенты в рецепте'
         constraints = [
             models.UniqueConstraint(
                 fields=['ingredient', 'recept'],

@@ -189,6 +189,13 @@ class IngridientAmount(models.Model):
         )
     )
 
+    def clean(self):
+        ingredients = self.ingredient
+        if IngridientAmount.objects.filter(ingredient=ingredients).count() < 1:
+            raise ValidationError(
+                'Нельзя удалить все ингридиенты'
+            )
+
     class Meta:
         verbose_name = 'Ингридиент в рецепте'
         verbose_name_plural = 'Ингридиенты в рецепте'

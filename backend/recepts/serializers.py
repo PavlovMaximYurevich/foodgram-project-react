@@ -192,10 +192,6 @@ class ReceptSerializer(serializers.ModelSerializer):
                 ingredient=current_ingredient,
                 amount=ingredient.get('amount')
             )
-        if not ingredients:
-            raise serializers.ValidationError(
-                'Нет ингридиентов'
-            )
         return super().update(instance, validated_data)
 
     def to_representation(self, instance):

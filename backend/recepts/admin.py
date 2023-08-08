@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.core.exceptions import ValidationError
+
 from recepts.models import (Favourites,
                             IngridientAmount,
                             Ingredients,
@@ -25,6 +27,13 @@ class ReceptAdmin(admin.ModelAdmin):
 
     search_fields = ('name', 'author')
     list_filter = ('name', 'author')
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if actions.get('ingredients') == None:
+            raise ValidationError(
+                'Список ингридиентов пуст'
+            )
 
 
 class IngredientsAdmin(admin.ModelAdmin):

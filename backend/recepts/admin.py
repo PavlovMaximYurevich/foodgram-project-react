@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from recepts.models import (Favourites,
@@ -13,7 +14,13 @@ from recepts.models import (Favourites,
 class IngredientsInReceptAdmin(admin.TabularInline):
     model = IngridientAmount
     min_num = 1
-    can_delete = False
+    # can_delete = False
+
+    def clean(self):
+        if not self.model.ingredient:
+            raise ValidationError(
+                "Рецепт не может иметь 0 ингредиетов"
+            )
 
 
 class ReceptAdmin(admin.ModelAdmin):

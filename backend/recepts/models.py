@@ -197,7 +197,6 @@ class IngridientAmount(models.Model):
             )
         ]
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
+    def clean(self):
         if not self.ingredient:
-            raise ValidationError('Рецепт не может быть без ингридиентов')
+            raise ValidationError("Рецепт не может быть без ингридиентов")

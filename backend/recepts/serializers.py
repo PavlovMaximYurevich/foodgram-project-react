@@ -157,7 +157,12 @@ class ReceptSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     'Такой ингридиент уже присутствует'
                 )
+
             ingredients_list.append(one_ingredient)
+            if ingredient['amount'] < 1:
+                raise serializers.ValidationError(
+                    'Количество не должно быть меньше 0'
+                )
         return attrs
 
     def create(self, validated_data):

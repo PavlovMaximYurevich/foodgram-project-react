@@ -108,7 +108,7 @@ class Recept(models.Model):
     class Meta:
         verbose_name = 'рецепт'
         verbose_name_plural = 'рецепты'
-        ordering = ('-pub_date', )
+        ordering = ('-pub_date',)
 
     def __str__(self):
         return self.name[:MAX_SYMBOLS]
@@ -131,7 +131,6 @@ class AbstractModel(models.Model):
 
 
 class Favourites(AbstractModel):
-
     class Meta:
         default_related_name = 'favourite'
         verbose_name = 'Избранное'
@@ -151,7 +150,6 @@ class Favourites(AbstractModel):
 
 
 class ShoppingList(AbstractModel):
-
     class Meta:
         default_related_name = 'user_shopper'
         verbose_name = 'Список покупок'
@@ -189,13 +187,6 @@ class IngridientAmount(models.Model):
         )
     )
 
-    def clean(self):
-        ingredients = self.ingredient
-        if IngridientAmount.objects.filter(ingredient=ingredients).count() < 1:
-            raise ValidationError(
-                'Нельзя удалить все ингридиенты'
-            )
-
     class Meta:
         verbose_name = 'Ингридиент в рецепте'
         verbose_name_plural = 'Ингридиенты в рецепте'
@@ -205,3 +196,8 @@ class IngridientAmount(models.Model):
                 name='ingredient_in_recept'
             )
         ]
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if not self.ingredient:
+            raise ValidationError('Рецепт не может быть без ингридиентов')

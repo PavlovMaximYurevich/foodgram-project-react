@@ -144,6 +144,9 @@ class ReceptSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Не выбрано ни одного ингридиента'
             )
+        if Ingredients.objects.filter(id=id).count() < 1:
+            raise serializers.ValidationError(
+                'Нельзя создать рецепт без ингридиента')
         return ingredients
 
     def validate(self, attrs):

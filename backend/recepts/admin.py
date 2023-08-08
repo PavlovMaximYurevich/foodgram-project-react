@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.core.exceptions import ValidationError
+from django.db import models
 
 from recepts.models import (Favourites,
                             IngridientAmount,
@@ -13,6 +13,7 @@ from recepts.models import (Favourites,
 class IngredientsInReceptAdmin(admin.TabularInline):
     model = IngridientAmount
     min_num = 1
+    can_delete = False
 
 
 class ReceptAdmin(admin.ModelAdmin):

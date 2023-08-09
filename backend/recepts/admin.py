@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.core.exceptions import ValidationError
 
 from recepts.models import (Favourites,
                             IngridientAmount,
@@ -19,11 +20,11 @@ class IngredientsInReceptAdmin(admin.TabularInline):
     #         return False
     #     return True
 
-    # def clean(self):
-    #     if not self.model.ingredient:
-    #         raise ValidationError(
-    #             "Рецепт не может иметь 0 ингредиетов"
-    #         )
+    def clean(self):
+        if not self.model.ingredient:
+            raise ValidationError(
+                "Рецепт не может иметь 0 ингредиетов"
+            )
 
 
 class ReceptAdmin(admin.ModelAdmin):

@@ -26,6 +26,12 @@ class IngredientsInReceptAdmin(admin.TabularInline):
     #         raise ValidationError(
     #             'Нет ингридиентов'
     #         )
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if actions.get("ingredients") is None:
+            raise ValidationError(
+                "Нет ингридиентов"
+            )
 
 
 class ReceptAdmin(admin.ModelAdmin):

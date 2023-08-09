@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.core.exceptions import ValidationError
+from django.db import models
 
 from recepts.models import (Favourites,
                             IngridientAmount,
@@ -19,11 +20,12 @@ class IngredientsInReceptAdmin(admin.TabularInline):
     #     if not self.model.ingredient:
     #         return False
     #     return True
-
     def clean(self):
-        if not self.model.ingredient and not self.model.amount:
+        ingr = Ingredients.objects.all().annotate(
+            ingredients=models.Count('ingredients'))
+        if len(ingr) < 1:
             raise ValidationError(
-                "Рецепт не может иметь 0 ингредиетов"
+                'Нет ингридиентов'
             )
 
 

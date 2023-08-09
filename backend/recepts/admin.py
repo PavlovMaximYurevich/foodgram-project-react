@@ -20,12 +20,12 @@ class IngredientsInReceptAdmin(admin.TabularInline):
     #     if not self.model.ingredient:
     #         return False
     #     return True
-    def clean(self):
-        ingr = Ingredients.objects.all()
-        if len(ingr) < 1:
-            raise ValidationError(
-                'Нет ингридиентов'
-            )
+    # def clean(self):
+    #     ingr = Ingredients.objects.all()
+    #     if len(ingr) < 1:
+    #         raise ValidationError(
+    #             'Нет ингридиентов'
+    #         )
 
 
 class ReceptAdmin(admin.ModelAdmin):

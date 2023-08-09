@@ -113,6 +113,16 @@ class Recept(models.Model):
     def __str__(self):
         return self.name[:MAX_SYMBOLS]
 
+    def clean(self):
+        if not self.ingredients:
+            raise ValidationError(
+                'нет ингридиентов'
+            )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
+
 
 class AbstractModel(models.Model):
     user = models.ForeignKey(

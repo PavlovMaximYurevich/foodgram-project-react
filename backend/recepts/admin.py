@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.forms import BaseInlineFormSet
 
 from recepts.models import (Favourites,
                             IngridientAmount,
@@ -14,24 +15,19 @@ from recepts.models import (Favourites,
 class IngredientsInReceptAdmin(admin.TabularInline):
     model = IngridientAmount
     min_num = 1
-    # can_delete = False
 
-    # def has_delete_permission(self, request, obj=None):
-    #     if not self.model.ingredient:
-    #         return False
-    #     return True
-    # def clean(self):
-    #     ingr = Ingredients.objects.all()
-    #     if len(ingr) < 1:
-    #         raise ValidationError(
-    #             'Нет ингридиентов'
-    #         )
-    def get_actions(self, request):
-        actions = super().get_actions(request)
-        if actions.get("ingredients") is None:
-            raise ValidationError(
-                "Нет ингридиентов"
-            )
+
+class IngredientInReceptForm(BaseInlineFormSet):
+    def clean(self):
+        super(IngredientInReceptForm, self).clean()
+        for form in self.forms:
+            if not hasattr(form, 'cleaned_data'):
+                continue
+            data = form.cleaned_data
+            if data.get('DELETE'):
+                raise ValidationError(
+                    'Нельзя удалить все ингридиенты'
+                )
 
 
 class ReceptAdmin(admin.ModelAdmin):

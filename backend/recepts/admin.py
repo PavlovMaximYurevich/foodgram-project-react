@@ -21,8 +21,7 @@ class IngredientsInReceptAdmin(admin.TabularInline):
     #         return False
     #     return True
     def clean(self):
-        ingr = Ingredients.objects.all().annotate(
-            ingredients=models.Count('ingredients'))
+        ingr = Ingredients.objects.all()
         if len(ingr) < 1:
             raise ValidationError(
                 'Нет ингридиентов'

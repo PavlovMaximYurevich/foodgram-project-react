@@ -12,11 +12,6 @@ from recepts.models import (Favourites,
                             )
 
 
-class IngredientsInReceptAdmin(admin.TabularInline):
-    model = IngridientAmount
-    min_num = 1
-
-
 class IngredientInReceptForm(BaseInlineFormSet):
     def clean(self):
         super(IngredientInReceptForm, self).clean()
@@ -28,6 +23,12 @@ class IngredientInReceptForm(BaseInlineFormSet):
                 raise ValidationError(
                     'Нельзя удалить все ингридиенты'
                 )
+
+
+class IngredientsInReceptAdmin(admin.TabularInline):
+    model = IngridientAmount
+    min_num = 1
+    formset = IngredientInReceptForm
 
 
 class ReceptAdmin(admin.ModelAdmin):

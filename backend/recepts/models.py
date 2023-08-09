@@ -114,7 +114,7 @@ class Recept(models.Model):
         return self.name[:MAX_SYMBOLS]
 
     # def clean(self):
-    #     if not self.ingredients:
+    #     if not self.ingredients.cou:
     #         raise ValidationError(
     #             'нет ингридиентов'
     #         )

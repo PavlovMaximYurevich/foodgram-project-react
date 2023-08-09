@@ -13,12 +13,12 @@ from recepts.models import (Favourites,
 class IngredientsInReceptAdmin(admin.TabularInline):
     model = IngridientAmount
     min_num = 1
-    # can_delete = False
+    can_delete = False
 
-    def has_delete_permission(self, request, obj=None):
-        if not self.model.ingredient:
-            return False
-        return True
+    # def has_delete_permission(self, request, obj=None):
+    #     if not self.model.ingredient:
+    #         return False
+    #     return True
 
     # def clean(self):
     #     if not self.model.ingredient:
